@@ -6,9 +6,16 @@ import { useRouter } from 'next/router';
 // Link는 오로지 href만 제공 스타일이라던지 클래스를 줄 수도 없다
 
 // Next.js에서 스타일 추해는 방법
+
 // 1. CSS모듈 패턴
-import styles from './NavBar.module.css';
+// import styles from './NavBar.module.css';
 // styles 객체에서 프로포트 사용하듯 사용 -> 실제로 브라우저에서는 다른 클래스이름이 들어가진다.(충돌 방지)
+
+// 2. styled jsx(Next.js의 고유의 방법)
+// style태그에 jsx props를 넣어준다.
+// className이 랜덤하게 들어가진다.(따로 className으로 설정해주지 않아도 자동으로 해줌)
+// 장점은 컴포넌트 별로 완전히 독립된 스타일을 설정해줄 수 있다.(똑같은 className을 지정해주더라도)
+// props도 전달가능
 
 const NavBar: FC = () => {
   const router = useRouter();
@@ -20,7 +27,7 @@ const NavBar: FC = () => {
           <Link href="/">
             <a
               href="replace"
-              className={`${styles.link} ${router.pathname === '/' ? styles.active : ''}`}
+              className={router.pathname === '/' ? 'active' : ''}
             >
               Home
             </a>
@@ -30,13 +37,28 @@ const NavBar: FC = () => {
           <Link href="/about">
             <a
               href="replace"
-              className={[styles.link, router.pathname === '/about' ? styles.active : ''].join(' ')}
+              className={router.pathname === '/about' ? 'active' : ''}
             >
               About
             </a>
           </Link>
         </li>
       </ul>
+      <style jsx>
+        {`
+          nav {
+            background-color: tomato;
+          }
+
+          a {
+            text-decoration: none;
+          }
+
+          .active {
+            color: yellow;
+          }
+        `}
+      </style>
     </nav>
   );
 };
