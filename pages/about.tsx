@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
-import NavBar from '../components/NavBar';
+// import NavBar from '../components/NavBar';
 
 const Potato: FC = () => (
   <>
-    <NavBar />
+    {/* <NavBar /> */}
     <h1>hello</h1>
   </>
 );

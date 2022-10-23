@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 // 1. CSS모듈 패턴
 // import styles from './NavBar.module.css';
 // styles 객체에서 프로포트 사용하듯 사용 -> 실제로 브라우저에서는 다른 클래스이름이 들어가진다.(충돌 방지)
+// 외부에서 css파일을 import 하려면 무조건 module파일이어야한다.(_app에서는 가능)
 
 // 2. styled jsx(Next.js의 고유의 방법)
 // style태그에 jsx props를 넣어준다.

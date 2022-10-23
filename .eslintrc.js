@@ -58,6 +58,6 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    'react/no-unknown-property': ['error', { ignore: ['jsx'] }],
+    'react/no-unknown-property': ['error', { ignore: ['jsx', 'global'] }],
   },
 };

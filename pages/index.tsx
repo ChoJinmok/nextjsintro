@@ -4,7 +4,7 @@
 
 import { FC } from 'react';
 
-import NavBar from '../components/NavBar';
+// import NavBar from '../components/NavBar';
 
 // 예외사항
 // index 파일은 home의 역할을 한다. -> 주소에 /만 붙고 /index하면 404가 뜬다.
@@ -12,8 +12,16 @@ import NavBar from '../components/NavBar';
 
 const Home: FC = () => (
   <>
-    <NavBar />
+    {/* <NavBar /> */}
     <h1>hello</h1>
+    {/* 패아지에 전역 스타일 주는 방법 */}
+    {/* <style jsx global>
+      {`
+        a {
+          color: white
+        }
+      `}
+    </style> */}
   </>
 );
 
@@ -29,3 +37,11 @@ export default Home;
 // Next.js는 React.js를 백엔드에서 동작시켜서(렌더링) 페이지를(HTML)을 미리 만들어서 소스코드에 넣어준다.
 // -> 유저는 React.js(자바스크립트)가 로딩되지 않아도 콘텐츠를 볼 수 있게된다.
 // 그리고 나서 React.js(자바스크립트)가 로딩됐을 때 HTML과 연결되서 일반적인 React.js앱이 된다.
+
+// 전역 스타일을 주려면(global) 페이지를 고려해야한다.(페이지마다 렌더링되기 때문)
+// global로 스타일을 줘도 그 페이지에만 스타일이 적용된다.(Next.js의 특징)
+// 위의 경우에 NavBar나 sylte을 일일이 페이지마다 지정해주면 불편
+// 한군데에만 지정해놓으면 되는 방법이 있다!~(모든 페이지의 설정을 할 수 있는 지점이 존재) => App Component, App Page
+
+// App Component, App Page
+// 일종의 어떤 컴포넌트의 청사진 역할을 한다.
