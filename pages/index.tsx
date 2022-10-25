@@ -4,6 +4,8 @@
 
 import { FC } from 'react';
 
+import Seo from '../components/Seo';
+
 // import NavBar from '../components/NavBar';
 
 // 예외사항
@@ -12,6 +14,7 @@ import { FC } from 'react';
 
 const Home: FC = () => (
   <>
+    <Seo title="Home" />
     {/* <NavBar /> */}
     <h1>hello</h1>
     {/* 패아지에 전역 스타일 주는 방법 */}
