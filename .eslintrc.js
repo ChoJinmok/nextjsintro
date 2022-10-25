@@ -59,5 +59,8 @@ module.exports = {
       },
     ],
     'react/no-unknown-property': ['error', { ignore: ['jsx', 'global'] }],
+    'react/jsx-props-no-spreading': ['error', {
+      exceptions: ['Component'],
+    }],
   },
 };
