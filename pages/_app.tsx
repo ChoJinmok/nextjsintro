@@ -4,14 +4,13 @@
 
 import type { AppProps } from 'next/app';
 
-import NavBar from '../components/NavBar';
+import Layout from '../components/Layout';
 
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <NavBar />
+    <Layout>
       <Component {...pageProps} />
       <span>hello</span>
       <style jsx global>
@@ -21,6 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}
       </style>
-    </>
+    </Layout>
   );
 }
+
+// layout pattern(custom app component에 사용)
+// _app파일의 크기를 줄여줄 수 있다.(이미 global로 import해야 할 것들이 많다.)
+// (ex. Google Analytics, 검색엔진 설정, 스크립트 분석)
+// Layout에다가 스타일을 줄 수도 있다.

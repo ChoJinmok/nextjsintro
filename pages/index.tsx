@@ -32,7 +32,7 @@ export default Home;
 // 만약에 JS파일을 받아오지 못하는 경우 CSR은 흰화면 밖에 못보여주지만 SSR은 만들어져있는 HTML을 보여줄 수 있다.
 
 // 또다른 장점은 hydration
-// Next.js는 초기 상태를 활용해서 미리 렌더링해준다.
+// Next.js는 초기 상태를 활용해서 미리 렌더링해준다.(pre-generate)
 // React.js를 프론트엔드 안에서 실행하는 걸 hydration이라고 한다.
 // Next.js는 React.js를 백엔드에서 동작시켜서(렌더링) 페이지를(HTML)을 미리 만들어서 소스코드에 넣어준다.
 // -> 유저는 React.js(자바스크립트)가 로딩되지 않아도 콘텐츠를 볼 수 있게된다.
