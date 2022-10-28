@@ -4,6 +4,8 @@
 
 import { FC, useEffect, useState } from 'react';
 
+import Image from 'next/image';
+
 import Seo from '../components/Seo';
 
 // import NavBar from '../components/NavBar';
@@ -12,6 +14,7 @@ import Seo from '../components/Seo';
 // index 파일은 home의 역할을 한다. -> 주소에 /만 붙고 /index하면 404가 뜬다.
 // react를 import할 필요가 없다.
 
+// redirect, rewrite: request에 mask를 씌우는 것과 비슷 -> next.config에서 설정
 const API_KEY = '';
 
 const Home: FC = () => {
@@ -32,19 +35,29 @@ const Home: FC = () => {
       <Seo title="Home" />
       {/* <NavBar /> */}
       {!movies && <h4>Loading...</h4>}
-      {movies?.map((movie: {id: number, title: string}) => (
+      {movies?.map((movie: {id: number, title: string, poster_path: string}) => (
         <div key={movie.id}>
+          <div className="moviePoster">
+            <Image
+              alt="moviePoster"
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
           <h4>{movie.title}</h4>
         </div>
       ))}
       {/* 패아지에 전역 스타일 주는 방법 */}
-      {/* <style jsx global>
-      {`
-        a {
-          color: white
+      <style jsx global>
+        {`
+        .moviePoster {
+          position: relative;
+          width: 200px;
+          height: 200px;
         }
       `}
-    </style> */}
+      </style>
     </>
   );
 };
