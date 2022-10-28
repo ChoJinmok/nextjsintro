@@ -1,8 +1,12 @@
 import { FC } from 'react';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { useRouter } from 'next/router';
+
+import profilePic from '../public/IMG_0735.jpg';
+
 // Link는 오로지 href만 제공 스타일이라던지 클래스를 줄 수도 없다
 
 // Next.js에서 스타일 추해는 방법
@@ -23,6 +27,9 @@ const NavBar: FC = () => {
 
   return (
     <nav>
+      <div className="img">
+        <Image alt="profile" src={profilePic} layout="fill" objectFit="cover" />
+      </div>
       <ul>
         <li>
           <Link href="/">
@@ -57,6 +64,12 @@ const NavBar: FC = () => {
 
           .active {
             color: yellow;
+          }
+
+          .img {
+            position: relative;
+            width: 50px;
+            height: 50px;
           }
         `}
       </style>

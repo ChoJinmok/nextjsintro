@@ -2,7 +2,7 @@
 // 컴포넌트의 이름은 원하는 대로 지어도 되고 꼭 export default로 내보내줘야한다.
 // 404 페이지도 Next.js에서 자동으로 만들어준다.(커스터마이징 가능)
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import Seo from '../components/Seo';
 
@@ -12,21 +12,42 @@ import Seo from '../components/Seo';
 // index 파일은 home의 역할을 한다. -> 주소에 /만 붙고 /index하면 404가 뜬다.
 // react를 import할 필요가 없다.
 
-const Home: FC = () => (
-  <>
-    <Seo title="Home" />
-    {/* <NavBar /> */}
-    <h1>hello</h1>
-    {/* 패아지에 전역 스타일 주는 방법 */}
-    {/* <style jsx global>
+const API_KEY = '';
+
+const Home: FC = () => {
+  const [movies, setMovies] = useState<[] | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { results } = await (await fetch(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+      )).json();
+
+      setMovies(results);
+    })();
+  }, []);
+
+  return (
+    <>
+      <Seo title="Home" />
+      {/* <NavBar /> */}
+      {!movies && <h4>Loading...</h4>}
+      {movies?.map((movie: {id: number, title: string}) => (
+        <div key={movie.id}>
+          <h4>{movie.title}</h4>
+        </div>
+      ))}
+      {/* 패아지에 전역 스타일 주는 방법 */}
+      {/* <style jsx global>
       {`
         a {
           color: white
         }
       `}
     </style> */}
-  </>
-);
+    </>
+  );
+};
 
 export default Home;
 
