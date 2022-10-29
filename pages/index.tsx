@@ -15,7 +15,7 @@ import Seo from '../components/Seo';
 // react를 import할 필요가 없다.
 
 // redirect, rewrite: request에 mask를 씌우는 것과 비슷 -> next.config에서 설정
-const API_KEY = '';
+// const API_KEY = '';
 
 const Home: FC = () => {
   const [movies, setMovies] = useState<[] | null>(null);
@@ -23,7 +23,7 @@ const Home: FC = () => {
   useEffect(() => {
     (async () => {
       const { results } = await (await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+        '/api/movies',
       )).json();
 
       setMovies(results);

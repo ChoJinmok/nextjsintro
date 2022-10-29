@@ -1,3 +1,5 @@
+const { API_KEY } = process.env;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -26,6 +28,16 @@ const nextConfig = {
         source: '/old-blog/:path*',
         destination: '/new-sexy-blog/:path*',
         permanent: false,
+      },
+    ];
+  },
+  // rewrites는 유저를 redirect시키기는 하지만 url은 변하지 않는다.
+  // -> redirect와 비슷하지만 유저가 url변화를 볼 수 없다.
+  async rewrites() {
+    return [
+      {
+        source: '/api/movies',
+        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
       },
     ];
   },
