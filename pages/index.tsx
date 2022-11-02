@@ -2,7 +2,7 @@
 // 컴포넌트의 이름은 원하는 대로 지어도 되고 꼭 export default로 내보내줘야한다.
 // 404 페이지도 Next.js에서 자동으로 만들어준다.(커스터마이징 가능)
 
-import { FC, useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
 
 import Image from 'next/image';
 
@@ -17,26 +17,36 @@ import Seo from '../components/Seo';
 // redirect, rewrite: request에 mask를 씌우는 것과 비슷 -> next.config에서 설정
 // const API_KEY = '';
 
-const Home: FC = () => {
-  const [movies, setMovies] = useState<[] | null>(null);
+interface Movie {
+  id: number,
+  title: string,
+  poster_path: string
+}
 
-  useEffect(() => {
-    (async () => {
-      const { results } = await (await fetch(
-        '/api/movies',
-      )).json();
+interface HomeProps {
+  movies: Movie[]
+}
 
-      setMovies(results);
-    })();
-  }, []);
+export default function Home({ movies }: HomeProps) {
+// const [movies, setMovies] = useState<[] | null>(null);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { results } = await (await fetch(
+  //       '/api/movies',
+  //     )).json();
+
+  //     setMovies(results);
+  //   })();
+  // }, []);
 
   return (
     <>
       <Seo title="Home" />
       {/* <NavBar /> */}
-      {!movies && <h4>Loading...</h4>}
-      {movies?.map((movie: {id: number, title: string, poster_path: string}) => (
-        <div key={movie.id}>
+      {/* {!movies && <h4>Loading...</h4>} */}
+      {movies?.map((movie) => (
+        <div className="movie" key={movie.id}>
           <div className="moviePoster">
             <Image
               alt="moviePoster"
@@ -51,6 +61,10 @@ const Home: FC = () => {
       {/* 패아지에 전역 스타일 주는 방법 */}
       <style jsx global>
         {`
+        .movie {
+          cursor: pointer;
+        }
+
         .moviePoster {
           position: relative;
           width: 200px;
@@ -60,15 +74,13 @@ const Home: FC = () => {
       </style>
     </>
   );
-};
-
-export default Home;
+}
 
 // Next.js의 장점은 앱이 있는 페이지를 미리 렌더링 하는 것(static, 정적으로 생성)
 // network 탭에서 속도 3G로 해서 CSR과 SSR 비교 가능
 // 만약에 JS파일을 받아오지 못하는 경우 CSR은 흰화면 밖에 못보여주지만 SSR은 만들어져있는 HTML을 보여줄 수 있다.
 
-// 또다른 장점은 hydration
+// 또다른 장점은 hydration (결국 hydration은 react가 하는 것)
 // Next.js는 초기 상태를 활용해서 미리 렌더링해준다.(pre-generate)
 // React.js를 프론트엔드 안에서 실행하는 걸 hydration이라고 한다.
 // Next.js는 React.js를 백엔드에서 동작시켜서(렌더링) 페이지를(HTML)을 미리 만들어서 소스코드에 넣어준다.
@@ -82,3 +94,37 @@ export default Home;
 
 // App Component, App Page
 // 일종의 어떤 컴포넌트의 청사진 역할을 한다.
+
+// get suercer side props: 페이지가 오직 server side render만 할지 선택할 수 있게한다.
+// Next.js는 app의 initail state(초기 상태)로 html을 만들어서 pre-rendering한다. (로딩을 만들어 놓으면 로딩이 초기 상태)
+// loading을 보여주기 싫을 수도 있다. -> fetch같이 server에서 일어나는 data관련된 작업을 모두 한 다음에(API 작압이 완료되고) 페이지를 render
+
+// 함수 이름을 바꾸면 안된다.
+// 이 함수의 코드는 server에서 돌아가게 된다. (API key도 숨길 수 있게 된다.)
+// 이 곳의 코드는 client에서는 알 수가 없다.
+
+// interface GetServerSidePropsReturnObject<T> {
+//   props: {
+//     results: T[],
+//   },
+// }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  // 서버는 localhost 주소를 모른다. -> 절대 경로로 바꿔주야한다.
+  // const { results: movies } = await (await fetch('/api/movies')).json();
+  const { results: movies } = await (await fetch('http://localhost:3000/api/movies')).json();
+
+  // 위의 컴포넌트에 props로 전달된다.
+  // => 페이지의 소스코드를 보면 __NEXT_DATA__에 props가 전달된 걸 볼 수 있다. -> 이 후 React.js가 hydration되면서 다시 장악
+  return {
+    props: {
+      movies,
+    },
+  };
+};
+
+// Next.js가 Home 컴포넌트를 받아서 _app의 Component자리에 넣고 getServerSideProps의 return값을 pageProps에 전달한다.
+// 하지만 이렇게 할 경우 API가 들어오기 전까지 화면에 아무것도 보이지 않게된다.
+// 선택을 해야한다.
+// 1. 항상 server side rendering을 하고 싶은가? (데이터가 유효할 때 화면이 보여지게 되는게 좋은가?) => SEO에 유리
+// 2. loading화면을 보여준 다음에 데이터를 받는게 좋은가?
