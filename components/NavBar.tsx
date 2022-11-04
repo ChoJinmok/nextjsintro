@@ -28,7 +28,7 @@ const NavBar: FC = () => {
   return (
     <nav>
       <div className="img">
-        <Image alt="profile" src={profilePic} layout="fill" objectFit="cover" />
+        <Image alt="profile" src={profilePic} layout="fill" objectFit="cover" priority />
       </div>
       <ul>
         <li>

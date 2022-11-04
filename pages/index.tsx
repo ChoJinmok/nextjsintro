@@ -1,10 +1,13 @@
 // Next.js는 pages의 파일이름으로 페이지를 라우팅해준다.(파일명이 URL이 된다.)
 // 컴포넌트의 이름은 원하는 대로 지어도 되고 꼭 export default로 내보내줘야한다.
 // 404 페이지도 Next.js에서 자동으로 만들어준다.(커스터마이징 가능)
+import { KeyboardEvent } from 'react';
 
 import { GetServerSideProps } from 'next';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Seo from '../components/Seo';
 
@@ -40,22 +43,98 @@ export default function Home({ movies }: HomeProps) {
   //   })();
   // }, []);
 
+  const router = useRouter();
+
+  interface HandleClickParams {
+    id: number,
+    title: string,
+    posterPath: string
+  }
+
+  function handleClick({ id, title, posterPath }: HandleClickParams) {
+    // next의 router는 URL에 정보를 숨겨 보낼 수도 있다
+    // 원래는 상세페이지로 넘어가면 title과 image를 새롭게 서버에서 받아야하지만
+    // React가 이미 가지고 있는 state에 있는 data이기 때문에 URL로 state를 넘겨주면 된다.(유저에게는 보여주지 않고)
+    return () => {
+      // router.push(`/movies/${id}`);
+      // url을 아래와 같이 객체로 전달 가능
+      // router.push({
+      //   pathname: `/movies/${id}`,
+      //   query: {
+      //     title: 'potatos',
+      //   },
+      // movies/124142?title=potatos 주소로 이동
+
+      // push의 두번째 매개변수인 'as'를 이용해서 유저에게 보여주지 않아도 되는 url정보를 숨겨줄 수 있다.
+      // as는 url를 마스킹해준다.
+      router.push({
+        pathname: `/movies/${id}`,
+        query: {
+          title,
+          posterPath,
+        },
+      }, `/movies/${id}`);
+      // 상세페이지의 router에서 전달한 query를 받아볼 수 있다.
+      // 하지만 유저가 url을 직접 입력해서 접근하면 정보를 받을 수 없다.
+    };
+  }
+
+  function handleKeyDown({ id, title, posterPath }: HandleClickParams) {
+    return (event: KeyboardEvent<HTMLDivElement>) => {
+      const key = event.key || event.keyCode;
+
+      if (key === 'Enter' || key === 13) {
+        router.push({
+          pathname: `/movies/${id}`,
+          query: {
+            title,
+            posterPath,
+          },
+        }, `/movies/${id}`);
+      }
+    };
+  }
+
   return (
     <>
       <Seo title="Home" />
       {/* <NavBar /> */}
       {/* {!movies && <h4>Loading...</h4>} */}
-      {movies?.map((movie) => (
-        <div className="movie" key={movie.id}>
-          <div className="moviePoster">
+      {movies?.map(({ id, title, poster_path: posterPath }) => (
+        // <Link href={`/movies/${movie.id}`} key={movie.id}>
+        // a태그는 div와 같은 컨테이너 보다 텍스트를 감싸주는 것이 좋다?
+        <div className="movie" key={id}>
+          <div
+            className="moviePoster"
+            role="link"
+            onClick={handleClick({ id, title, posterPath })}
+            onKeyDown={handleKeyDown({ id, title, posterPath })}
+            tabIndex={0}
+          >
             <Image
               alt="moviePoster"
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w500${posterPath}`}
               layout="fill"
               objectFit="cover"
+              priority
             />
           </div>
-          <h4>{movie.title}</h4>
+          <h4>
+            {/* Link에서도 as 사용가능 */}
+            {/* <Link href={`/movies/${id}`}>{title}</Link> */}
+            <Link
+              href={{
+                pathname: `/movies/${id}`,
+                query: {
+                  title,
+                  posterPath,
+                },
+              }}
+              as={`/movies/${id}`}
+            >
+              {title}
+            </Link>
+          </h4>
         </div>
       ))}
       {/* 패아지에 전역 스타일 주는 방법 */}
