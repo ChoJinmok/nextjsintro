@@ -48,10 +48,9 @@ export default function Home({ movies }: HomeProps) {
   interface HandleClickParams {
     id: number,
     title: string,
-    posterPath: string
   }
 
-  function handleClick({ id, title, posterPath }: HandleClickParams) {
+  function handleClick({ id, title }: HandleClickParams) {
     // next의 router는 URL에 정보를 숨겨 보낼 수도 있다
     // 원래는 상세페이지로 넘어가면 title과 image를 새롭게 서버에서 받아야하지만
     // React가 이미 가지고 있는 state에 있는 data이기 때문에 URL로 state를 넘겨주면 된다.(유저에게는 보여주지 않고)
@@ -67,30 +66,32 @@ export default function Home({ movies }: HomeProps) {
 
       // push의 두번째 매개변수인 'as'를 이용해서 유저에게 보여주지 않아도 되는 url정보를 숨겨줄 수 있다.
       // as는 url를 마스킹해준다.
-      router.push({
-        pathname: `/movies/${id}`,
-        query: {
-          title,
-          posterPath,
-        },
-      }, `/movies/${id}`);
+      // router.push({
+      //   pathname: `/movies/${id}`,
+      //   query: {
+      //     title,
+      //     posterPath,
+      //   },
+      // }, `/movies/${id}`);
       // 상세페이지의 router에서 전달한 query를 받아볼 수 있다.
       // 하지만 유저가 url을 직접 입력해서 접근하면 정보를 받을 수 없다.
+      router.push(`/movies/${title}/${id}`);
     };
   }
 
-  function handleKeyDown({ id, title, posterPath }: HandleClickParams) {
+  function handleKeyDown({ id, title }: HandleClickParams) {
     return (event: KeyboardEvent<HTMLDivElement>) => {
       const key = event.key || event.keyCode;
 
       if (key === 'Enter' || key === 13) {
-        router.push({
-          pathname: `/movies/${id}`,
-          query: {
-            title,
-            posterPath,
-          },
-        }, `/movies/${id}`);
+        // router.push({
+        //   pathname: `/movies/${id}`,
+        //   query: {
+        //     title,
+        //     posterPath,
+        //   },
+        // }, `/movies/${id}`);
+        router.push(`/movies/${title}/${id}`);
       }
     };
   }
@@ -107,8 +108,8 @@ export default function Home({ movies }: HomeProps) {
           <div
             className="moviePoster"
             role="link"
-            onClick={handleClick({ id, title, posterPath })}
-            onKeyDown={handleKeyDown({ id, title, posterPath })}
+            onClick={handleClick({ id, title })}
+            onKeyDown={handleKeyDown({ id, title })}
             tabIndex={0}
           >
             <Image
@@ -122,7 +123,7 @@ export default function Home({ movies }: HomeProps) {
           <h4>
             {/* Link에서도 as 사용가능 */}
             {/* <Link href={`/movies/${id}`}>{title}</Link> */}
-            <Link
+            {/* <Link
               href={{
                 pathname: `/movies/${id}`,
                 query: {
@@ -133,7 +134,8 @@ export default function Home({ movies }: HomeProps) {
               as={`/movies/${id}`}
             >
               {title}
-            </Link>
+            </Link> */}
+            <Link href={`/movies/${title}/${id}`}>{title}</Link>
           </h4>
         </div>
       ))}
