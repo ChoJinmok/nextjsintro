@@ -193,8 +193,12 @@ export default function Home({ movies }: HomeProps) {
 export const getServerSideProps: GetServerSideProps = async () => {
   // 서버는 localhost 주소를 모른다. -> 절대 경로로 바꿔주야한다.
   // const { results: movies } = await (await fetch('/api/movies')).json();
+
+  console.log(process.env.VERCEL_URL);
+
   const { results: movies } = await (await fetch(`${process.env.VERCEL_URL ?? 'http://localhost:3000'}/api/movies`)).json();
 
+  console.log(movies);
   // 위의 컴포넌트에 props로 전달된다.
   // => 페이지의 소스코드를 보면 __NEXT_DATA__에 props가 전달된 걸 볼 수 있다. -> 이 후 React.js가 hydration되면서 다시 장악
   return {
