@@ -195,7 +195,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   // const { results: movies } = await (await fetch('/api/movies')).json();
 
   const { results: movies } = await (await fetch(
-    'https://nextjsintro-flame.vercel.app/api/movies',
+    `${process.env.VERCEL_URL ?? 'http://localhost:3000'}/api/movies`,
   )).json();
 
   // 위의 컴포넌트에 props로 전달된다.
