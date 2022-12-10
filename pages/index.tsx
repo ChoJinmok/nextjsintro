@@ -195,7 +195,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   // const { results: movies } = await (await fetch('/api/movies')).json();
 
   const { results: movies } = await (await fetch(
-    `${process.env.VERCEL_URL}/api/movies`,
+    `${process.env.NEXT_PUBLIC_VERCEL_URL ?? 'http://localhost:3000'}/api/movies`,
   )).json();
 
   // 위의 컴포넌트에 props로 전달된다.
